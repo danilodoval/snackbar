@@ -4,8 +4,6 @@ Portal Snack Bar Service
 
 ## System Requirements
 
-- Java 1.8+
-- MongoDb
 - Docker
 
 ## Docker
