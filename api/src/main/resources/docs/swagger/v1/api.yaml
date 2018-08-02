@@ -1,0 +1,297 @@
+openapi: "3.0.0"
+info:
+  title: Snack Bar
+  description: Snack Bar API Documentation
+  version: "1.0.0"
+servers:
+- url: http://localhost/api/v1
+paths:
+  /ingredients:
+    get:
+      summary: Retrieve the metadata of all Ingredients
+      tags:
+      - Ingredients
+      parameters:
+      - in: query
+        name: size
+        schema:
+          type: integer
+          default: 1000
+        description: The number of items to return
+        required: false
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 0
+        description: Number of items to skip before starting to collect the ingredient metadata objects.
+        required: false
+      responses:
+        200:
+          description: The ingredients list info.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ingredient"
+        204:
+          description: No content.
+        500:
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+  /orders:
+    get:
+      summary: Retrieve the metadata of all Orders
+      tags:
+      - Orders
+      parameters:
+      - in: query
+        name: size
+        schema:
+          type: integer
+          default: 1000
+        description: The number of items to return
+        required: false
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 0
+        description: Number of items to skip before starting to collect the resource metadata objects.
+        required: false
+      responses:
+        200:
+          description: The Order list info.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        204:
+          description: No content.
+        500:
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+    post:
+      summary: Create default Order
+      tags:
+      - Orders
+      requestBody:
+        description: Order to be create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewOrder"
+      responses:
+        200:
+          description: The Order list info.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderCreated"
+        400:
+          description: Bad request. Missing required field, or field has invalid value.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+        404:
+          description: Snack not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+        500:
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+  /orders/custom:
+    post:
+      summary: Create custom order
+      tags:
+      - Orders
+      requestBody:
+        description: Custom order to be create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewOrderCustom"
+      responses:
+        200:
+          description: The Custom order list info.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderCreated"
+        400:
+          description: Bad request. Missing required field, or field has invalid value.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+        404:
+          description: Ingredient not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+        500:
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+  /snacks:
+    get:
+      summary: Retrieve the metadata of all Snacks
+      tags:
+      - Snacks
+      parameters:
+      - in: query
+        name: size
+        schema:
+          type: integer
+          default: 1000
+        description: The number of items to return
+        required: false
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 0
+        description: Number of items to skip before starting to collect the snack metadata objects.
+        required: false
+      responses:
+        200:
+          description: The Snack list info.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Snack"
+        204:
+          description: No content.
+        500:
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+components:
+  schemas:
+    Ingredient:
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The Ingredient unique identification.
+        description:
+          type: string
+          description: Description for this Ingredient.
+        cost:
+          type: number
+          description: Cost for this Ingredient.
+    Order:
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The Order unique identification.
+        client:
+          type: string
+          description: Name of the clientk.
+        snacks:
+          type: array
+          description: A list of existing snacks that make up the order or a list of ingredients that make a snack.
+          items:
+            $ref: '#/components/schemas/Snack'
+    NewOrder:
+      properties:
+        client:
+          type: string
+          description: Name of the client.
+        snacks:
+          type: array
+          description: Order Snack List
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The Snack unique identification.
+              quantity:
+                type: integer
+                description: quantity of snack.
+    NewOrderCustom:
+      properties:
+        client:
+          type: string
+          description: Name of the client.
+        items:
+          type: array
+          description: IngredientId List
+          items:
+            type: object
+            properties:
+              ingredientId:
+                type: string
+                format: uuid
+                description: The Ingredient unique identification.
+              quantity:
+                type: integer
+                description: quantity of ingredient.
+    OrderCreated:
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The Order unique identification.
+        client:
+          type: string
+          description: Name of the clientk.
+        items:
+          type: array
+          description: A list of existing snacks that make up the order itemk.
+          items:
+            properties:
+              snack:
+                $ref: '#/components/schemas/Snack'
+              quantity:
+                type: integer
+                description: quantity of snack.
+        cost:
+          type: number
+          description: Cost for this Order.
+        discount:
+          type: number
+          description: Discount for this Order.
+    Snack:
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The Snack unique identification.
+        description:
+          type: string
+          description: Description for this Snack.
+        ingredients:
+          type: array
+          description: A list of existing ingredients that make up the snack.
+          items:
+            $ref: '#/components/schemas/Ingredient'
+
+    ResponseError:
+      properties:
+        message:
+          type: string
+          description: Message that describes an error event.
