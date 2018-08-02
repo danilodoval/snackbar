@@ -13,6 +13,7 @@ Portal Snack Bar Service
 ```
 $ cd $WORKSPACE/snackbar
 $ docker-compose -f docker-compose.yml up -d
+```
 
 ## API Guide
 
