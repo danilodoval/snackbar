@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Snack Bar | Snacks</title>
+    <link href="./assets/css/normalize.css" rel="stylesheet">
+    <link href="./assets/css/bootstrap-4.1.3/bootstrap.min.css" rel="stylesheet">
+    <link href="./assets/css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="index.html">Snack Bar</a>
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="#">Sign out</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <span data-feather="home"></span>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="orders.html">
+                                <span data-feather="shopping-cart"></span>Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="snacks.html">
+                                <span data-feather="layers"></span>Snacks <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="ingredients.html">
+                                <span data-feather="align-justify"></span>Ingredients
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Snacks</h1>
+                </div>
+                <table class="table table-bordered table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Ingredients</th>
+                            </tr>
+                        </thead>
+                        <tbody class="js-viewSnacks">
+                            <tr>
+                                <td colspan="2">No registered found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </main>
+        </div>
+    </div>
+    <script src="./assets/js/jquery-3.3.1.min.js"></script>
+    <script src="./assets/js/bootstrap-4.1.3/bootstrap.min.js"></script>
+    <script src="./assets/js/feather.min.js"></script>
+    <script src="./assets/js/lodash.min.js"></script>
+    <script src="./assets/js/app/snack/index.js" type="module"></script>
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>
