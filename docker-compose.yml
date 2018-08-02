@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+  # mongodb
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - /opt/snack/mongodb:/data/db      
+
+  # backend
+  api:
+    build:
+      context: api
+      dockerfile: Dockerfile
+    image: api
+    container_name: api
+    ports:
+      - 8080:8080
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    environment:
+      SNACK_MONGODB_URI: mongodb://mongodb/snack_bar 
+      SNACK_DATA_MONGO: mongodb
+      SNACK_WEB_CLIENT_URL: http://localhost:8080,http://localhost
+
+  # nginx
+  web:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./snack.template:/etc/nginx/conf.d/snack.template
+      - ./front:/usr/share/nginx/html
+    ports:
+      - "80:80"
