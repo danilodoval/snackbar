@@ -39,7 +39,7 @@ public class IngredientServiceTest {
     @Before
     public void setupMock() {
         MockitoAnnotations.initMocks(this);
-        ingredientService = new IngredientService(ingredientRepository);
+        ingredientService = new IngredientService();
         ingredientServiceSpy = PowerMockito.spy(ingredientService);
     }
 

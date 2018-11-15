@@ -22,8 +22,9 @@ public class IngredientController {
 
         Page<Ingredient> ingredients = ingredientService.getAllIngredients(pageable);
 
-        if (!ingredients.hasContent())
+        if (!ingredients.hasContent()) {
             return ResponseEntity.noContent().build();
+        }
 
         return ResponseEntity.ok(ingredients);
     }

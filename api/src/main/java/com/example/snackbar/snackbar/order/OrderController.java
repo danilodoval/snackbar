@@ -6,11 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/${api.version}")
@@ -24,8 +20,9 @@ public class OrderController {
 
         Page<Order> orders = orderService.getAllOrders(pageable);
 
-        if (!orders.hasContent())
+        if (!orders.hasContent()) {
             return ResponseEntity.noContent().build();
+        }
 
         return ResponseEntity.ok(orders);
     }

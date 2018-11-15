@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -32,18 +33,23 @@ public class SnackServiceTest {
     @Mock
     private SnackService snackService;
 
+    private SnackService snackServiceSpy;
+
     @Mock
     private SnackRepository snackRepository;
 
-    private SnackService snackServiceSpy;
-
     private Snack snack;
+
+    private List<Ingredient> ingredients = new ArrayList<>();
 
     @Before
     public void setupMock() {
         MockitoAnnotations.initMocks(this);
-        snackService = new SnackService(snackRepository);
+        snackService = new SnackService();
         snackServiceSpy = PowerMockito.spy(snackService);
+
+
+        ingredients.add(new Ingredient(UUID.randomUUID().toString(), "ingredient", 10.5));
     }
 
     @Test
@@ -56,8 +62,9 @@ public class SnackServiceTest {
     @Test
     public void shouldFindAllSnacks() {
         List<Snack> snackList = new ArrayList<>();
-        snackList.add(new Snack("XBacon", null));
-        snackList.add(new Snack("XBurger", null));
+
+        snackList.add(new Snack("XBacon", ingredients));
+        snackList.add(new Snack("XBurger", ingredients));
 
         PageRequest pageRequest = new PageRequest(1, 10);
         Page<Snack> page = new PageImpl<>(snackList);
@@ -86,13 +93,13 @@ public class SnackServiceTest {
 
     @Test
     public void shouldFindSnack_whenWithId() {
-        Snack snack = new Snack("XPTO",  null);
+        Snack snack = new Snack("XPTO", ingredients);
         when(snackServiceSpy.findById("123")).thenReturn(snack);
         assertEquals(snackServiceSpy.findById("123"), snack);
     }
 
     @Test
-    public void shouldCalculateCost(){
+    public void shouldCalculateCost() {
         List<Ingredient> ingredientList = new ArrayList<>();
         ingredientList.add(new Ingredient("XBacon", 2.0));
         ingredientList.add(new Ingredient("XBurger", 1.0));

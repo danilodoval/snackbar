@@ -10,9 +10,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +28,12 @@ public class PromotionServiceTest {
     @Mock
     private PromotionService promotionService;
 
-    @Mock
-    private PromotionRepository promotionRepository;
-
     private PromotionService promotionServiceSpy;
 
     @Before
     public void setupMock() {
         MockitoAnnotations.initMocks(this);
-        promotionService = new PromotionService(promotionRepository);
+        promotionService = new PromotionService();
         promotionServiceSpy = PowerMockito.spy(promotionService);
     }
 
@@ -52,8 +46,8 @@ public class PromotionServiceTest {
     @Test
     public void shouldFindAllSnacks() {
         List<Promotion> promotionList = new ArrayList<>();
-        promotionList.add(new Promotion("Prom1", null, null, 1,10.0, false));
-        promotionList.add(new Promotion("Prom2", null, null, 1,15.0, true));
+        promotionList.add(new Promotion("Prom1", null, null, 1, 10.0, false));
+        promotionList.add(new Promotion("Prom2", null, null, 1, 15.0, true));
 
         when(promotionServiceSpy.getAllPromotion()).thenReturn(promotionList);
         assertEquals(promotionServiceSpy.getAllPromotion(), promotionList);
@@ -79,7 +73,7 @@ public class PromotionServiceTest {
 
     @Test
     public void shouldFindSnack_whenWithId() {
-        Promotion promotion = new Promotion("Prom1", null, null,1, 10.0, false);
+        Promotion promotion = new Promotion("Prom1", null, null, 1, 10.0, false);
         when(promotionServiceSpy.findById("123")).thenReturn(promotion);
         assertEquals(promotionServiceSpy.findById("123"), promotion);
     }

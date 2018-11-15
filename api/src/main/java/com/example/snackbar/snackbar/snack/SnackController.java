@@ -22,8 +22,9 @@ public class SnackController {
 
         Page<Snack> snacks = snackService.getAllSnacks(pageable);
 
-        if (!snacks.hasContent())
+        if (!snacks.hasContent()) {
             return ResponseEntity.noContent().build();
+        }
 
         return ResponseEntity.ok(snacks);
     }

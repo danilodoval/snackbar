@@ -63,7 +63,7 @@ public class OrderServiceTest {
     @Before
     public void setupMock() {
         MockitoAnnotations.initMocks(this);
-        orderService = new OrderService(orderRepository, ingredientService, promotionService, snackService, logger);
+        orderService = new OrderService();
         orderServiceSpy = PowerMockito.spy(orderService);
     }
 
@@ -123,7 +123,6 @@ public class OrderServiceTest {
         List<SnackData> snacks = new ArrayList<>();
         snacks.add(new SnackData("XPTO", 1));
         OrderData orderData = new OrderData("XPTO", null);
-
 
         assertEquals(orderServiceSpy.createOrder(orderData).getStatusCode(), HttpStatus.NOT_FOUND);
     }

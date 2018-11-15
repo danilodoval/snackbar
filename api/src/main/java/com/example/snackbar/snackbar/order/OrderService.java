@@ -1,5 +1,6 @@
 package com.example.snackbar.snackbar.order;
 
+import com.example.snackbar.snackbar.SnackBarApplication;
 import com.example.snackbar.snackbar.exception.MessageException;
 import com.example.snackbar.snackbar.ingredient.Ingredient;
 import com.example.snackbar.snackbar.ingredient.IngredientService;
@@ -10,6 +11,8 @@ import com.example.snackbar.snackbar.snack.SnackData;
 import com.example.snackbar.snackbar.snack.SnackService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,23 +29,15 @@ import static java.util.Arrays.asList;
 @Service
 public class OrderService {
 
+    private static final Logger logger = LoggerFactory.getLogger(SnackBarApplication.class);
+    @Autowired
     private OrderRepository orderRepository;
-
+    @Autowired
     private IngredientService ingredientService;
-
+    @Autowired
     private PromotionService promotionService;
-
+    @Autowired
     private SnackService snackService;
-
-    private final Logger logger;
-
-    public OrderService(OrderRepository orderRepository, IngredientService ingredientService, PromotionService promotionService, SnackService snackService, Logger logger) {
-        this.orderRepository = orderRepository;
-        this.ingredientService = ingredientService;
-        this.promotionService = promotionService;
-        this.snackService = snackService;
-        this.logger = logger;
-    }
 
     double calculeDiscount(List<OrderDataCustomItem> items, double cost) {
 
@@ -66,11 +61,11 @@ public class OrderService {
                 int count = items.stream().filter(e -> (ingredientWith.getId().equals(e.getIngredientId())))
                         .mapToInt(x -> x.getQuantity()).findFirst().orElse(0);
 
-                int multipleItens = count / promotion.getQuantitywith();
+                int multipleItens = count / promotion.getQuantityWith();
 
                 logger.info("apply item discount " + promotion.isDiscountItem());
                 if (promotion.isDiscountItem()) {
-                    discont += (ingredientWith.getCost() * promotion.getQuantitywith()) * ((promotion.getDiscount() * multipleItens) / 100);
+                    discont += (ingredientWith.getCost() * promotion.getQuantityWith()) * ((promotion.getDiscount() * multipleItens) / 100);
                 } else {
                     discont += cost * ((promotion.getDiscount() * multipleItens) / 100);
                 }
@@ -96,12 +91,10 @@ public class OrderService {
     public ResponseEntity createOrder(OrderData orderData) {
 
         if (StringUtils.isEmpty(orderData.getClient())) {
-            logger.info("Client is empty");
             throw new MessageException(SNACK_CLIENTREQUIRED, HttpStatus.BAD_REQUEST);
         }
 
         if (orderData.getSnacks() == null) {
-            logger.info("Snack is empty");
             throw new MessageException(SNACK_SNACKREQUIRED, HttpStatus.BAD_REQUEST);
         }
 
@@ -113,7 +106,6 @@ public class OrderService {
 
             Snack snack = snackService.findById(snackData.getId());
             if (snack == null) {
-                logger.info("Snack not found");
                 throw new MessageException(SNACK_NOTFOUND, HttpStatus.NOT_FOUND);
             }
 
@@ -130,17 +122,14 @@ public class OrderService {
     public ResponseEntity createOrderCustom(OrderDataCustom orderDataCustom) {
 
         if (StringUtils.isEmpty(orderDataCustom.getClient())) {
-            logger.info("Client is empty");
             throw new MessageException(SNACK_CLIENTREQUIRED, HttpStatus.BAD_REQUEST);
         }
 
         if (orderDataCustom.getItems() == null) {
-            logger.info("Items is empty");
             throw new MessageException(SNACK_INGREDIENTREQUIRED, HttpStatus.BAD_REQUEST);
         }
 
         if (orderDataCustom.getItems().size() == 0) {
-            logger.info("Items is empty");
             throw new MessageException(SNACK_INGREDIENTREQUIRED, HttpStatus.BAD_REQUEST);
         }
 
@@ -154,7 +143,6 @@ public class OrderService {
         for (OrderDataCustomItem item : orderDataCustom.getItems()) {
             Ingredient ingredient = ingredientService.findById(item.ingredientId);
             if (ingredient == null) {
-                logger.info("Ingredient not found");
                 throw new MessageException(INGREDIENT_NOTFOUND, HttpStatus.NOT_FOUND);
             }
 
